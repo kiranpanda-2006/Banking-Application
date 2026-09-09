@@ -82,7 +82,7 @@ public class TransactionService {
     }
 
     public TransactionResponse getTransaction(String transactionId) {
-        return mapToResponse(transactionRepo.findByTransactionId(transactionId)
+        return mapToResponse(transactionRepo.findById(transactionId)
                 .orElseThrow(() -> new ResourceNotFoundException("Transaction Not found for " +transactionId)));
     }
 
@@ -99,7 +99,7 @@ public class TransactionService {
     public TransactionResponse verifyOtp(String transactionId, String otp) {
         log.info("OTP verification for the  Transaction: {}", transactionId);
 
-        Transaction transaction = transactionRepo.findByTransactionId(transactionId).
+        Transaction transaction = transactionRepo.findById(transactionId).
                 orElseThrow(() -> new ResourceNotFoundException("No transaction found with "+transactionId));
 
         String otpKey = "verificationOtp" + transactionId;
@@ -248,7 +248,7 @@ public class TransactionService {
 
     public void processCleanResult(String transactionId) {
 
-        Transaction transaction = transactionRepo.findByTransactionId(transactionId).
+        Transaction transaction = transactionRepo.findById(transactionId).
                 orElseThrow(() -> new ResourceNotFoundException("No transaction found with "+transactionId));
 
         if (transaction.getStatus() != TransactionStatus.PROCESSING){

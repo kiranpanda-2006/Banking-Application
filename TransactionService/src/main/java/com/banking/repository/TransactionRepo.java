@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TransactionRepo extends JpaRepository<Transaction,String> {
-    Optional<Transaction> findByTransactionId(String transactionId);
 
     Optional<List<Transaction>> findBySenderAccountNumberOrderByCreatedAtDesc(String accountNumber);
 }

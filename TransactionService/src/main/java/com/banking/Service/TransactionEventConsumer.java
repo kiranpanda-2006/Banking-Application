@@ -51,7 +51,7 @@ public class TransactionEventConsumer {
             log.info("Verification required: transaction: {} reason: {}",transactionId,reason);
 
             Transaction transaction
-                    = transactionRepo.findByTransactionId(transactionId).orElseThrow(
+                    = transactionRepo.findById(transactionId).orElseThrow(
                     () -> new ResourceNotFoundException("Transaction not found.")
             );
 

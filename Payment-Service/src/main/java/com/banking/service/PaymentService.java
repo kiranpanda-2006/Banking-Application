@@ -35,9 +35,9 @@ public class PaymentService {
     private static final String PAYMENT_FAILED_TOPIC = "payment.failed";
 
     @Value("${Razorpay.key}")
-    private final String razorPayKey;
+    private  String razorPayKey;
     @Value("${Razorpay.secret}")
-    private final String razorPaySecret;
+    private  String razorPaySecret;
 
     /**
      * create Razorpay payment order
@@ -126,7 +126,7 @@ public class PaymentService {
             String orderID = (String) paymentData.get("order_id");
             String paymentId = (String) paymentData.get("id");
 
-            Payment payment = paymentRepository.findByRazorpayOrderId(orderID)
+            Payment payment = paymentRepository.findByRazorPayOrderId(orderID)
                     .orElseThrow(() -> new ResourceNotFoundException("Not found Order: "+orderID));
 
             payment.setRazorPayPaymentId(paymentId);
@@ -158,7 +158,7 @@ public class PaymentService {
             assert paymentData != null;
             String orderID = (String) paymentData.get("order_id");
 
-            Payment payment = paymentRepository.findByRazorpayOrderId(orderID)
+            Payment payment = paymentRepository.findByRazorPayOrderId(orderID)
                     .orElseThrow(() -> new ResourceNotFoundException("Not found Order: "+orderID));
 
             payment.setFailureReason("payment failed via RazorPay");

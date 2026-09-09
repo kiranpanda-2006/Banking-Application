@@ -8,31 +8,21 @@ spring:
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
 
-    jpa:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
       hibernate:
-        ddl-auto: update
-      properties:
-        hibernate:
-          dialect: org.hibernate.dialect.MySQLDialect
-          format_sql: true
-      open-in-view: true
+        dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: true
+    open-in-view: true
 
-    kafka:
-      bootstrap-servers: localhost:9092
+  kafka:
+    bootstrap-servers: localhost:9092
 
-#      consumer:
-#        group-id: account-service-group
-#        auto-offset-reset: earliest
-#        key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-#        value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
-#        properties:
-#          spring.json.trusted.packages: "*"
-#          spring.json.use.type.headers: false
-#          spring.json.value.default.type: java.util.HashMap
-
-      producer:
-        key-serializer: org.apache.kafka.common.serialization.StringSerializer
-        value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
 server:
   port: 8083
@@ -42,8 +32,8 @@ management:
     web:
       exposure:
         include: health,info
-#Razorpay Configuration
+
+# Razorpay Configuration
 Razorpay:
   key: rzp_test_TZWKLDkIPJyaUa
   secret: Th1lZiy5CedQsU33LiLkdjEt
-  webHook-secret:

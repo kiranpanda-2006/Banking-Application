@@ -35,7 +35,7 @@ public class AccountService {
     public AccountResponse createAccount(@Valid CreateAccountRequest request) throws DuplicateResourceException {
         log.info("creating account {}", request.getEmail());
 
-        if (accountRepository.existByEmail(request.getEmail())){
+        if (accountRepository.existsByEmail(request.getEmail())){
             throw new DuplicateResourceException("Account Already exist By this email");
         }
 
@@ -190,7 +190,7 @@ public class AccountService {
             Long number = random.nextLong(1_000_000_000_000L);
 
             accountNumber = String.format("%012d",number);
-        }while (accountRepository.existByAccountNumber(accountNumber));
+        }while (accountRepository.existsByAccountNumber(accountNumber));
 
         return accountNumber;
     }
