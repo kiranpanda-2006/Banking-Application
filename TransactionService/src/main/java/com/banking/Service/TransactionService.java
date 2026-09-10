@@ -62,19 +62,21 @@ public class TransactionService {
         accountServiceClient
                 .deductBalance(sendersAccountNumber,amount);
 
+        accountServiceClient
+                .creditBalance(request.getReceiverAccountNumber(), amount);
 
        Transaction savedTransaction =
                transactionRepo.save(mapToEntity(request));
 
        log.info("Transaction saved as Processing: {}",savedTransaction.getId());
 //SAGA step-2: publish for fraud Check
-       TransactionInitiatedEvent event =
-               TransactionInitiatedEvent.builder()
-                .TransactionId(savedTransaction.getId())
-                .senderAccountNumber(savedTransaction.getSenderAccountNumber())
-                .receiverAccountNumber(savedTransaction.getReceiverAccountNumber())
-                .description(savedTransaction.getDescription())
-                .build();
+       TransactionInitiatedEvent event = new TransactionInitiatedEvent(
+               savedTransaction.getId(),
+               savedTransaction.getSenderAccountNumber(),
+               savedTransaction.getReceiverAccountNumber(),
+               savedTransaction.getAmount(),
+               savedTransaction.getDescription()
+       );
 
        template.send(TRANSACTION_INITIATED_TOPIC,savedTransaction.getId(),event);
        log.info("SAGA step2: TransactionInitiatedEvent Published: {}",savedTransaction.getId());

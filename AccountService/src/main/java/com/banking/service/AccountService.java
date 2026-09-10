@@ -32,7 +32,7 @@ public class AccountService {
     private static final SecureRandom random = new SecureRandom();
 
 
-    public AccountResponse createAccount(@Valid CreateAccountRequest request) throws DuplicateResourceException {
+    public AccountResponse createAccount(CreateAccountRequest request) throws DuplicateResourceException {
         log.info("creating account {}", request.getEmail());
 
         if (accountRepository.existsByEmail(request.getEmail())){
