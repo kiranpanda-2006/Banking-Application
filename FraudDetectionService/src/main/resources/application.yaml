@@ -26,14 +26,17 @@ spring:
     bootstrap-servers: localhost:9092
 
     consumer:
-      group-id: fraud-detection-service-group
+      group-id: fraud-detection-group
       auto-offset-reset: earliest
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
 
-    producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+
+      properties:
+        spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JacksonJsonDeserializer
+        spring.json.use.type.headers: false
+        spring.json.value.default.type: java.util.Map
+        spring.json.trusted.packages: "*"
 
 server:
   port: 8087

@@ -62,9 +62,6 @@ public class TransactionService {
         accountServiceClient
                 .deductBalance(sendersAccountNumber,amount);
 
-        accountServiceClient
-                .creditBalance(request.getReceiverAccountNumber(), amount);
-
        Transaction savedTransaction =
                transactionRepo.save(mapToEntity(request));
 
