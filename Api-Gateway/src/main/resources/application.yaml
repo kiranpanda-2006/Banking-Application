@@ -46,6 +46,11 @@ spring:
 server:
   port: 8080
 
+# Account Service URL for Feign Client
+account:
+  service:
+    url: http://localhost:8081
+
 management:
   endpoints:
     web:
