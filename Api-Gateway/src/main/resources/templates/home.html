@@ -1,10 +1,10 @@
 <!DOCTYPE html>
+
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Create Bank Account</title>
+    <title>Banking System - Home</title>
 
     <style>
         * {
@@ -17,6 +17,7 @@
         body {
             background: #f4f7fb;
             min-height: 100vh;
+            color: #0f172a;
         }
 
         .navbar {
@@ -24,7 +25,6 @@
             color: white;
             padding: 18px 60px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
         }
 
@@ -32,20 +32,13 @@
             color: #38bdf8;
         }
 
-        .navbar a {
-            color: white;
-            text-decoration: none;
-            margin-left: 25px;
-        }
-
         .hero {
             text-align: center;
-            padding: 50px 20px 30px;
+            padding: 55px 20px 35px;
         }
 
         .hero h1 {
             font-size: 38px;
-            color: #0f172a;
             margin-bottom: 12px;
         }
 
@@ -54,222 +47,267 @@
             font-size: 17px;
         }
 
-        .form-container {
-            width: 600px;
-            max-width: 95%;
-            margin: 20px auto 50px;
-            background: white;
-            padding: 35px;
-            border-radius: 12px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+        .container {
+            width: 1100px;
+            max-width: 94%;
+            margin: 10px auto 60px;
         }
 
-        .form-container h2 {
-            color: #0f172a;
-            margin-bottom: 25px;
-        }
-
-        .form-group {
-            margin-bottom: 18px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 7px;
-            font-weight: bold;
-            color: #334155;
-        }
-
-        input,
-        select {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #cbd5e1;
-            border-radius: 7px;
-            font-size: 15px;
-            outline: none;
-        }
-
-        input:focus,
-        select:focus {
-            border-color: #0ea5e9;
-        }
-
-        .error {
-            display: block;
-            color: #dc2626;
-            font-size: 13px;
-            margin-top: 5px;
-        }
-
-        .submit-btn {
-            width: 100%;
-            padding: 14px;
-            border: none;
-            border-radius: 7px;
-            background: #0284c7;
-            color: white;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-
-        .submit-btn:hover {
-            background: #0369a1;
-        }
-
-        .success {
-            background: #dcfce7;
-            color: #166534;
-            padding: 12px;
-            border-radius: 7px;
+        .section-title {
             margin-bottom: 20px;
         }
 
-        @media (max-width: 600px) {
+        .section-title h2 {
+            font-size: 24px;
+        }
+
+        .section-title p {
+            color: #64748b;
+            margin-top: 5px;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 22px;
+        }
+
+        .option-card {
+            background: white;
+            padding: 28px;
+            border-radius: 12px;
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.07);
+            text-decoration: none;
+            color: #0f172a;
+            transition: 0.2s;
+            border: 1px solid #e2e8f0;
+        }
+
+        .option-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+            border-color: #38bdf8;
+        }
+
+        .icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            background: #e0f2fe;
+            color: #0284c7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 23px;
+            margin-bottom: 18px;
+        }
+
+        .option-card h3 {
+            margin-bottom: 8px;
+            font-size: 19px;
+        }
+
+        .option-card p {
+            color: #64748b;
+            line-height: 1.5;
+            font-size: 14px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 25px;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        @media (max-width: 850px) {
+            .options-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
             .navbar {
-                padding: 15px 20px;
+                padding: 18px 25px;
+            }
+        }
+
+        @media (max-width: 550px) {
+            .options-grid {
+                grid-template-columns: 1fr;
             }
 
             .hero h1 {
                 font-size: 30px;
             }
-
-            .form-container {
-                padding: 25px;
-            }
         }
     </style>
+    ```
+
 </head>
 
 <body>
 
-<nav class="navbar">
-    <h2>Banking System</h2>
-
-    <div>
-        <a href="/">Home</a>
-        <a href="/login">Login</a>
-    </div>
-</nav>
 
 <section class="hero">
-    <h1>Open Your Bank Account</h1>
-    <p>Create your account quickly and securely.</p>
+
+    <h1>Welcome to Banking System</h1>
+
+    <p>
+        Manage your bank account and perform your banking operations securely.
+    </p>
+
 </section>
 
-<div class="form-container">
+<div class="container">
 
-    <h2>Create Account</h2>
+    <div class="section-title">
 
-    <div th:if="${success}" class="success" th:text="${success}"></div>
+        <h2>Banking Services</h2>
 
-    <form th:action="@{/api/user/v1/submit}"
-          th:object="${accountDto}"
-          method="post">
+        <p>
+            Select an operation to continue.
+        </p>
 
-        <!-- Account Holder Name -->
-        <div class="form-group">
-            <label for="accountHolderName">
-                Account Holder Name
-            </label>
+    </div>
 
-            <input type="text"
-                   id="accountHolderName"
-                   th:field="*{accountHolderName}"
-                   placeholder="Enter account holder name">
 
-            <span class="error"
-                  th:if="${#fields.hasErrors('accountHolderName')}"
-                  th:errors="*{accountHolderName}">
-            </span>
-        </div>
+    <div class="options-grid">
 
-        <!-- Email -->
-        <div class="form-group">
-            <label for="email">
-                Email
-            </label>
 
-            <input type="email"
-                   id="email"
-                   th:field="*{email}"
-                   placeholder="Enter email address">
+        <!-- Create Account -->
+        <a href="/account/create" class="option-card">
 
-            <span class="error"
-                  th:if="${#fields.hasErrors('email')}"
-                  th:errors="*{email}">
-            </span>
-        </div>
+            <div class="icon">+</div>
 
-        <!-- Phone -->
-        <div class="form-group">
-            <label for="phone">
-                Mobile Number
-            </label>
+            <h3>Create Account</h3>
 
-            <input type="tel"
-                   id="phone"
-                   th:field="*{phone}"
-                   placeholder="Enter mobile number">
+            <p>
+                Open a new bank account and provide your account details.
+            </p>
 
-            <span class="error"
-                  th:if="${#fields.hasErrors('phone')}"
-                  th:errors="*{phone}">
-            </span>
-        </div>
+        </a>
 
-        <!-- Account Type -->
-        <div class="form-group">
-            <label for="accountType">
-                Account Type
-            </label>
 
-            <select id="accountType"
-                    th:field="*{accountType}">
+        <!-- Account Details -->
+        <a href="/api/v1/account/details" class="option-card">
 
-                <option value="">-- Select Account Type --</option>
+            <div class="icon">👤</div>
 
-                <option th:each="type : ${accountTypes}"
-                        th:value="${type}"
-                        th:text="${type}">
-                </option>
+            <h3>Account Details</h3>
 
-            </select>
+            <p>
+                View your account information, account type and personal details.
+            </p>
 
-            <span class="error"
-                  th:if="${#fields.hasErrors('accountType')}"
-                  th:errors="*{accountType}">
-            </span>
-        </div>
+        </a>
 
-        <!-- Initial Deposit -->
-        <div class="form-group">
-            <label for="initialDeposit">
-                Initial Deposit
-            </label>
 
-            <input type="number"
-                   id="initialDeposit"
-                   th:field="*{initialDeposit}"
-                   min="0.01"
-                   step="0.01"
-                   placeholder="Enter initial deposit">
+        <!-- Update Account -->
+        <a href="/api/v1/account/update" class="option-card">
 
-            <span class="error"
-                  th:if="${#fields.hasErrors('initialDeposit')}"
-                  th:errors="*{initialDeposit}">
-            </span>
-        </div>
+            <div class="icon">✎</div>
 
-        <button type="submit" class="submit-btn">
-            Create Bank Account
-        </button>
+            <h3>Update Account</h3>
 
-    </form>
+            <p>
+                Update your account information such as phone and email.
+            </p>
+
+        </a>
+
+
+        <!-- Delete Account -->
+        <a href="/api/v1/account/delete" class="option-card">
+
+            <div class="icon">×</div>
+
+            <h3>Delete Account</h3>
+
+            <p>
+                Permanently close your existing bank account.
+            </p>
+
+        </a>
+
+
+        <!-- Deposit -->
+        <a href="/api/v1/account/deposit" class="option-card">
+
+            <div class="icon">↓</div>
+
+            <h3>Deposit Money</h3>
+
+            <p>
+                Add money to your bank account securely.
+            </p>
+
+        </a>
+
+
+        <!-- Withdraw -->
+        <a href="/api/v1/account/withdraw" class="option-card">
+
+            <div class="icon">↑</div>
+
+            <h3>Withdraw Money</h3>
+
+            <p>
+                Withdraw money from your available account balance.
+            </p>
+
+        </a>
+
+
+        <!-- Transfer -->
+        <a href="/api/v1/account/transfer" class="option-card">
+
+            <div class="icon">⇄</div>
+
+            <h3>Transfer Money</h3>
+
+            <p>
+                Transfer money from your account to another bank account.
+            </p>
+
+        </a>
+
+
+        <!-- Balance -->
+        <a href="/api/v1/account/balance" class="option-card">
+
+            <div class="icon">₹</div>
+
+            <h3>Check Balance</h3>
+
+            <p>
+                View your current available account balance.
+            </p>
+
+        </a>
+
+
+        <!-- Transactions -->
+        <a href="/api/v1/account/transactions" class="option-card">
+
+            <div class="icon">☷</div>
+
+            <h3>Transaction History</h3>
+
+            <p>
+                View your previous deposits, withdrawals and transfers.
+            </p>
+
+        </a>
+
+    </div>
 
 </div>
+
+<footer class="footer">
+
+
+    © 2026 Banking System. All rights reserved.
+
+</footer>
 
 </body>
 </html>
