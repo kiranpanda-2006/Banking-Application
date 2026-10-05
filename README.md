@@ -25,31 +25,46 @@ The project is designed to demonstrate a real-world distributed banking system u
 The application follows a microservices architecture.
 
 ```text
-                    Client
-                      |
-                      v
-              +---------------+
-              |  API Gateway  |
-              +---------------+
-                 /     |     \
-                /      |      \
-               v       v       v
-        +---------+ +---------+ +----------------+
-        |  User   | | Account | |  Transaction   |
-        | Service | | Service | |    Service     |
-        +---------+ +---------+ +----------------+
-                         |
-                         v
-                  +-------------+
-                  |    MySQL    |
-                  +-------------+
+                              Client
+                                |
+                                v
+                       +----------------+
+                       |   API Gateway   |
+                       +----------------+
+                         /    |     \
+                        /     |      \
+                       v      v       v
+                +---------+ +---------+ +----------------+
+                |  User   | | Account | |  Transaction   |
+                | Service | | Service | |    Service     |
+                +---------+ +---------+ +----------------+
+                    |           |              |
+                    |           |              |
+                    v           v              v
+                +-----------------------------------------+
+                |                  MySQL                   |
+                +-----------------------------------------+
 
-              Supporting Services
-              -------------------
-              Kafka
-              Redis
+                              Transaction Events
+                                      |
+                                      v
+                              +---------------+
+                              |     Kafka     |
+                              +---------------+
+                                /      |      \
+                               /       |       \
+                              v        v        v
+                    +----------------+ +----------------+
+                    | Fraud Detection| | Notification   |
+                    |    Service     | |    Service     |
+                    +----------------+ +----------------+
+                            |                 |
+                            v                 v
+                       +---------+       +---------+
+                       |  Redis  |       |  Email / |
+                       |         |       |  Alerts  |
+                       +---------+       +---------+
 ```
-
 ## Services
 
 ### API Gateway
@@ -130,7 +145,7 @@ Redis is used for maintaining temporary transaction-related information.
 Open account creation page:
 
 ```text
-GET /account/create
+GET /api/user/v1
 ```
 
 Open account details page:
