@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Create Bank Account</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f7fb;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: #0f172a;
+            color: white;
+            padding: 18px 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar h2 {
+            color: #38bdf8;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin-left: 25px;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 50px 20px 30px;
+        }
+
+        .hero h1 {
+            font-size: 38px;
+            color: #0f172a;
+            margin-bottom: 12px;
+        }
+
+        .hero p {
+            color: #64748b;
+            font-size: 17px;
+        }
+
+        .form-container {
+            width: 600px;
+            max-width: 95%;
+            margin: 20px auto 50px;
+            background: white;
+            padding: 35px;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .form-container h2 {
+            color: #0f172a;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: bold;
+            color: #334155;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 7px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #0ea5e9;
+        }
+
+        .error {
+            display: block;
+            color: #dc2626;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 7px;
+            background: #0284c7;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            background: #0369a1;
+        }
+
+        .success {
+            background: #dcfce7;
+            color: #166534;
+            padding: 12px;
+            border-radius: 7px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .navbar {
+                padding: 15px 20px;
+            }
+
+            .hero h1 {
+                font-size: 30px;
+            }
+
+            .form-container {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<section class="hero">
+    <h1>Open Your Bank Account</h1>
+    <p>Create your account quickly and securely.</p>
+</section>
+
+<div class="form-container">
+
+    <h2>Create Account</h2>
+
+    <div th:if="${success}" class="success" th:text="${success}"></div>
+
+    <form th:action="@{/account/create}"
+          th:object="${accountDto}"
+          method="post">
+
+        <!-- Account Holder Name -->
+        <div class="form-group">
+            <label for="accountHolderName">
+                Account Holder Name
+            </label>
+
+            <input type="text"
+                   id="accountHolderName"
+                   th:field="*{accountHolderName}"
+                   placeholder="Enter account holder name">
+
+            <span class="error"
+                  th:if="${#fields.hasErrors('accountHolderName')}"
+                  th:errors="*{accountHolderName}">
+            </span>
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+            <label for="email">
+                Email
+            </label>
+
+            <input type="email"
+                   id="email"
+                   th:field="*{email}"
+                   placeholder="Enter email address">
+
+            <span class="error"
+                  th:if="${#fields.hasErrors('email')}"
+                  th:errors="*{email}">
+            </span>
+        </div>
+
+        <!-- Phone -->
+        <div class="form-group">
+            <label for="phone">
+                Mobile Number
+            </label>
+
+            <input type="tel"
+                   id="phone"
+                   th:field="*{phone}"
+                   placeholder="Enter mobile number">
+
+            <span class="error"
+                  th:if="${#fields.hasErrors('phone')}"
+                  th:errors="*{phone}">
+            </span>
+        </div>
+
+        <!-- Account Type -->
+        <div class="form-group">
+            <label for="accountType">
+                Account Type
+            </label>
+
+            <select id="accountType"
+                    th:field="*{accountType}">
+
+                <option value="">-- Select Account Type --</option>
+
+                <option th:each="type : ${accountTypes}"
+                        th:value="${type}"
+                        th:text="${type}">
+                </option>
+
+            </select>
+
+            <span class="error"
+                  th:if="${#fields.hasErrors('accountType')}"
+                  th:errors="*{accountType}">
+            </span>
+        </div>
+
+        <!-- Initial Deposit -->
+        <div class="form-group">
+            <label for="initialDeposit">
+                Initial Deposit
+            </label>
+
+            <input type="number"
+                   id="initialDeposit"
+                   th:field="*{initialDeposit}"
+                   min="0.01"
+                   step="0.01"
+                   placeholder="Enter initial deposit">
+
+            <span class="error"
+                  th:if="${#fields.hasErrors('initialDeposit')}"
+                  th:errors="*{initialDeposit}">
+            </span>
+        </div>
+
+        <button type="submit" class="submit-btn">
+            Create Bank Account
+        </button>
+
+    </form>
+
+</div>
+
+</body>
+</html>

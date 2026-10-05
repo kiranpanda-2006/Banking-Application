@@ -1,29 +1,26 @@
 package com.banking.dto;
 
-
-import com.banking.enums.AccountStatus;
-import com.banking.enums.AccountType;
-import lombok.*;
+import jdk.jshell.Snippet;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class AccountResponse {
-
+public class AccountResponseDto {
     private String id;
     private String accountNumber;
     private String accountHolderName;
     private String email;
     private String phone;
-    private AccountType accountType;
-    private AccountStatus status;
+    private String accountType;
+    private String status;
     private BigDecimal balance;
     private BigDecimal dailyTransactionLimit;
     private LocalDateTime createdAt;
-
 }
