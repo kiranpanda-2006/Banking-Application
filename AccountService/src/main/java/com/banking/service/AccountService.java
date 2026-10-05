@@ -169,18 +169,21 @@ public class AccountService {
 //    helper methods are here
 
     private AccountResponse mapToResponse(Account savedAccount) {
-        return AccountResponse.builder()
-                .id(savedAccount.getId())
-                .accountNumber(savedAccount.getAccountNumber())
-                .accountHolderName(savedAccount.getAccountHolderName())
-                .email(savedAccount.getEmail())
-                .phone(savedAccount.getPhone())
-                .accountType(savedAccount.getAccountType())
-                .status(savedAccount.getStatus())
-                .balance(savedAccount.getBalance())
-                .dailyTransactionLimit(savedAccount.getDailyTransactionLimit())
-                .createdAt(savedAccount.getCreatedAt())
-                .build();
+
+        AccountResponse response = new AccountResponse();
+
+        response.setId(savedAccount.getId());
+        response.setAccountNumber(savedAccount.getAccountNumber());
+        response.setAccountHolderName(savedAccount.getAccountHolderName());
+        response.setEmail(savedAccount.getEmail());
+        response.setPhone(savedAccount.getPhone());
+        response.setAccountType(savedAccount.getAccountType());
+        response.setStatus(savedAccount.getStatus());
+        response.setBalance(savedAccount.getBalance());
+        response.setDailyTransactionLimit(savedAccount.getDailyTransactionLimit());
+        response.setCreatedAt(savedAccount.getCreatedAt());
+
+        return response;
     }
 
 //generating unique 12 digit accountNumber can take time run many database queries.

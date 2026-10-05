@@ -22,7 +22,7 @@ public class AccountController {
 
     @PostMapping
     public ResponseEntity<AccountResponse> createAccount(
-            @Valid CreateAccountRequest request
+            @Valid @RequestBody CreateAccountRequest request
             ) throws DuplicateResourceException {
 
 
