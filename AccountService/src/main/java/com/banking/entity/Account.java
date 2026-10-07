@@ -12,6 +12,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "accounts")
@@ -23,6 +24,8 @@ public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
+    @Column(name = "user_id", nullable = false, unique = true)
+    private Long userId;
     @Column(nullable = false)
     private String accountNumber;
     @Column(nullable = false)

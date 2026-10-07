@@ -20,7 +20,8 @@ public interface AccountserviceClient {
 
     @PostMapping("/api/v1/account")
     ResponseEntity<AccountResponseDto> createAccount(
-            @RequestBody AccountDto accountDto);
+            @RequestBody AccountDto accountDto,
+            @RequestParam Long userId);
 
     @GetMapping("/api/v1/account/{accountNumber}")
     AccountResponseDto getAccountByAccountNumber(

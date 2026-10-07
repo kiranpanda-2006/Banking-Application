@@ -22,12 +22,13 @@ public class AccountController {
 
     @PostMapping
     public ResponseEntity<AccountResponse> createAccount(
-            @Valid @RequestBody CreateAccountRequest request
+            @Valid @RequestBody CreateAccountRequest request,
+            @RequestParam Long userId
             ) throws DuplicateResourceException {
 
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(accountService.createAccount(request));
+                .body(accountService.createAccount(request,userId));
     }
 
     @GetMapping("/{accountNumber}")

@@ -32,15 +32,20 @@ public class AccountService {
     private static final SecureRandom random = new SecureRandom();
 
 
-    public AccountResponse createAccount(CreateAccountRequest request) throws DuplicateResourceException {
+    public AccountResponse createAccount(CreateAccountRequest request,Long userId) throws DuplicateResourceException {
         log.info("creating account {}", request.getEmail());
 
         if (accountRepository.existsByEmail(request.getEmail())){
             throw new DuplicateResourceException("Account Already exist By this email");
         }
 
+        if (accountRepository.existsByUserId(userId)){
+            throw new DuplicateResourceException("Account is already exists by user.");
+        }
+
         Account account = Account.builder()
                 .accountHolderName(request.getAccountHolderName())
+                .userId(userId)
                 .accountType(request.getAccountType())
                 .email(request.getEmail())
                 .phone(request.getPhone())
