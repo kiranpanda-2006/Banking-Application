@@ -96,6 +96,11 @@ public class AccountController {
                 .body(amount+" Successfully credited to  "+accountNumber);
     }
 
+// find user by userId
 
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<AccountResponse> getAccountByUserId(@PathVariable("userId") Long userID){
+        return ResponseEntity.ok(accountService.findAccountByUserId(userID));
+    }
 
 }

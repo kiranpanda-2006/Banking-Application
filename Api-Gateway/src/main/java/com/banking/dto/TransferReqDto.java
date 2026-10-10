@@ -4,14 +4,17 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
-@Data
-@NoArgsConstructor
+
+@Getter
+@Setter
 @AllArgsConstructor
-public class TransferRequest {
+@NoArgsConstructor
+public class TransferReqDto {
 
     @NotBlank(message = "Senders account number is required.")
     private String senderAccountNumber;
@@ -22,6 +25,5 @@ public class TransferRequest {
     private BigDecimal amount;
 
     private Long userId;
-
     private String description;
 }

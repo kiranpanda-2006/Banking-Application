@@ -2,6 +2,9 @@ package com.banking.client;
 
 import com.banking.dto.AccountDto;
 import com.banking.dto.AccountResponseDto;
+import com.banking.dto.TransactionResponseDto;
+import com.banking.dto.TransferReqDto;
+import jakarta.validation.Valid;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,4 +35,7 @@ public interface AccountserviceClient {
             (@RequestParam("accountNumber") String accountNumber);
 
 //    @PutMapping("/{accountNumber}/credit")
+    @GetMapping("/api/v1/account/user/{userId}")
+    AccountResponseDto findAccountByUserId(@PathVariable Long userId);
+
 }

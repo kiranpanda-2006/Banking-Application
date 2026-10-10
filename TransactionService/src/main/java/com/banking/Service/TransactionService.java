@@ -136,6 +136,7 @@ public class TransactionService {
                 .senderAccountNumber(request.getSenderAccountNumber())
                 .receiverAccountNumber(request.getReceiverAccountNumber())
                 .amount(request.getAmount())
+                .userId(request.getUserId())
                 .type(TransactionType.TRANSFER)
                 .status(TransactionStatus.PROCESSING)
                 .description(request.getDescription())
@@ -167,7 +168,7 @@ public class TransactionService {
                 transaction.getAmount());
 //        completing the transaction from senders account to receivers account
         accountServiceClient.creditBalance(
-                transaction.getReceiverAccountNumber(),
+                transaction.getReceiverAccountNumber().trim(),
                 transaction.getAmount()
         );
 

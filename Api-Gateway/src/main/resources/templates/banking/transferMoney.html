@@ -1,10 +1,239 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transfer Money | Banking</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .transfer-container {
+            width: 100%;
+            max-width: 480px;
+            background: #fff;
+            padding: 32px;
+            border-radius: 14px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .header h1 {
+            color: #0f172a;
+            font-size: 27px;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .account-info {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 9px;
+            padding: 16px;
+            margin-bottom: 24px;
+        }
+
+        .account-info .label {
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 6px;
+        }
+
+        .account-info .account-number {
+            font-size: 18px;
+            font-weight: bold;
+            color: #1d4ed8;
+            overflow-wrap: anywhere;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #334155;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 15px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input:focus, textarea:focus {
+            border-color: #2563eb;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 85px;
+        }
+
+        .optional {
+            color: #94a3b8;
+            font-weight: normal;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            background: #2563eb;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .submit-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #475569;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .back-link:hover {
+            color: #2563eb;
+        }
+
+        .message {
+            padding: 12px;
+            margin-bottom: 18px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .error {
+            color: #b91c1c;
+            background: #fef2f2;
+        }
+
+        .success {
+            color: #166534;
+            background: #f0fdf4;
+        }
+    </style>
 </head>
+
 <body>
+
+<div class="transfer-container">
+
+    <div class="header">
+        <h1>Transfer Money</h1>
+        <p>Send money securely to another account</p>
+    </div>
+
+    <!-- Logged-in user's sender account -->
+    <div class="account-info">
+        <div class="label">From Account</div>
+        <div class="account-number"
+             th:text="${senderAccountNumber}">
+            Sender Account Number
+        </div>
+    </div>
+
+    <!-- Error message -->
+    <div th:if="${errorMessage != null}"
+         class="message error"
+         th:text="${errorMessage}">
+    </div>
+
+    <!-- Success message -->
+    <div th:if="${successMessage != null}"
+         class="message success"
+         th:text="${successMessage}">
+    </div>
+
+    <form th:action="@{/account/transfer}"
+          th:object="${transactionDto}"
+          method="post">
+
+        <div class="form-group">
+            <label for="receiverAccountNumber">
+                Receiver Account Number
+            </label>
+
+            <input type="text"
+                   id="receiverAccountNumber"
+                   th:field="*{receiverAccountNumber}"
+                   placeholder="Enter receiver account number"
+                   required>
+        </div>
+
+        <div class="form-group">
+            <label for="amount">Transfer Amount (₹)</label>
+
+            <input type="number"
+                   id="amount"
+                   th:field="*{amount}"
+                   placeholder="Enter amount"
+                   min="0.01"
+                   step="0.01"
+                   required>
+        </div>
+
+        <div class="form-group">
+            <label for="description">
+                Description <span class="optional">(Optional)</span>
+            </label>
+
+            <textarea id="description"
+                      th:field="*{description}"
+                      maxlength="250"
+                      placeholder="e.g. Rent, bill payment, personal transfer"></textarea>
+        </div>
+
+        <button type="submit" class="submit-btn">
+            Transfer Money
+        </button>
+
+    </form>
+
+    <a th:href="@{/home}" class="back-link">
+        ← Back to Dashboard
+    </a>
+
+</div>
 
 </body>
 </html>

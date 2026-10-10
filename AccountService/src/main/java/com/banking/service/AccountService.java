@@ -181,6 +181,7 @@ public class AccountService {
         response.setAccountNumber(savedAccount.getAccountNumber());
         response.setAccountHolderName(savedAccount.getAccountHolderName());
         response.setEmail(savedAccount.getEmail());
+        response.setUserId(savedAccount.getUserId());
         response.setPhone(savedAccount.getPhone());
         response.setAccountType(savedAccount.getAccountType());
         response.setStatus(savedAccount.getStatus());
@@ -201,5 +202,13 @@ public class AccountService {
         }while (accountRepository.existsByAccountNumber(accountNumber));
 
         return accountNumber;
+    }
+
+    public AccountResponse findAccountByUserId(Long userId){
+        Account account =
+                accountRepository.findByUserId(userId)
+                        .orElseThrow(() -> new ResourceNotFoundException("user not found."));
+
+        return mapToResponse(account);
     }
 }

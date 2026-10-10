@@ -40,65 +40,71 @@ public class TransactionEventConsumer {
      */
 
     @KafkaListener(topics = "verification.required")
-    public void consumeVerificationRequired(@Payload Map<String,Object> payload){
+    public void consumeVerificationRequired(
+            @Payload Map<String, Object> payload) {
 
-        try{
-            String transactionId = (String) payload.get("transactionId");
-            String accountNumber = (String) payload.get("accountNumber");
-            String reason  = (String) payload.get("reason");
+        log.info("method started.");
 
+        try {
+            log.info("Received verification.required event: {}", payload);
 
-            log.info("Verification required: transaction: {} reason: {}",transactionId,reason);
+            String transactionId = String.valueOf(payload.get("transactionId"));
+            String accountNumber = String.valueOf(payload.get("accountNumber"));
+            String reason = String.valueOf(payload.get("reason"));
 
-            Transaction transaction
-                    = transactionRepo.findById(transactionId).orElseThrow(
-                    () -> new ResourceNotFoundException("Transaction not found.")
-            );
+            Transaction transaction = transactionRepo.findById(transactionId)
+                    .orElseThrow(() ->
+                            new ResourceNotFoundException("Transaction not found: " + transactionId));
 
-            if (transaction.getStatus() != TransactionStatus.PROCESSING){
-                log.warn("Transaction Not Processing - skipping, "+transactionId);
+            if (transaction.getStatus() != TransactionStatus.PROCESSING) {
+                log.warn("Transaction not processing; skipping: {}", transactionId);
+                return;
             }
 
-//            generate 6 digit otp
-            String otp = String.format("%06d", (int) (Math.random() * 900000)+100000);
+            // Generate a 6-digit OTP
+            String otp = String.format("%06d",
+                    new java.security.SecureRandom().nextInt(900000) + 100000);
 
-//            store it in redis and set the expiration time
-            String otpKey = "verificationOtp" + transactionId;
+            // Store OTP in Redis for 5 minutes
+            String otpKey = "verificationOtp:" + transactionId;
 
-            redisTemplate.opsForValue().set(otpKey, otp, OTP_EXPIRATION_MINUTE, TimeUnit.MINUTES);
+            redisTemplate.opsForValue().set(
+                    otpKey,
+                    otp,
+                    OTP_EXPIRATION_MINUTE,
+                    TimeUnit.MINUTES
+            );
 
-//            update status
-
+            // Update transaction status
             transaction.setStatus(TransactionStatus.PENDING_VERIFICATION);
             transactionRepo.save(transaction);
 
-            log.info("OTP generated for Transaction- {} expires in {} Minuit",otp,OTP_EXPIRATION_MINUTE );
+            // Publish OTP notification event
+            Map<String, Object> otpEvent = new HashMap<>();
+            otpEvent.put("transactionId", transactionId);
+            otpEvent.put("accountNumber", accountNumber);
+            otpEvent.put("reason", reason);
+            otpEvent.put("otp", otp);
+            otpEvent.put("amount", payload.get("amount"));
 
-//            notify the user via email or sms
+            kafkaTemplate.send(
+                    TRANSACTION_OTP_GENERATED_TOPIC,
+                    transactionId,
+                    otpEvent
+            );
 
-            Map<String,Object> otpEvent = new HashMap<>();
+            log.info("OTP generated for transaction {} and expires in {} minutes",
+                    transactionId, OTP_EXPIRATION_MINUTE);
 
-            otpEvent.put("transactionId",transactionId);
-            otpEvent.put("accountNumber",accountNumber);
-            otpEvent.put("reason",reason);
-            otpEvent.put("otp",otp);
-            otpEvent.put("amount",payload.get("amount"));
-
-            kafkaTemplate.send(TRANSACTION_OTP_GENERATED_TOPIC,transactionId,otpEvent);
-
-
-        }catch (Exception e){
-
-            log.error("Error handling verification required: {} ", e.getMessage());
+        } catch (Exception e) {
+            log.error("Error handling verification.required event", e);
         }
-
     }
-
     /**
      * consume fraud.check.clean
      * confirm the transaction is completed
      */
-    @KafkaListener(topics = "fraud.check.result")
+    @KafkaListener(topics = "fraud.check.clean")
     public void consumeFraudCheckCleanResult(
             @Payload Map<String,Object> payload
     ){

@@ -19,30 +19,28 @@ public class NotificationService {
      * @param payload
      */
     @KafkaListener(topics = "transaction.otp.generated")
-    public void consumeOtpGenerated(
-            @Payload Map<String,Object> payload
-            ){
+    public void consumeOtpGenerated(@Payload Map<String, Object> payload) {
         try {
             String accountNumber = (String) payload.get("accountNumber");
             String otp = (String) payload.get("otp");
-            String transactionId = (String) payload.get("transactionId");
-            String amount = payload.get("amount").toString();
+            String amount = String.valueOf(payload.get("amount"));
             String reason = (String) payload.get("reason");
 
             sendAlert(
                     accountNumber,
                     "TRANSACTION VERIFICATION REQUIRED",
                     String.format(
-                            "suspicious Activity detect on your account. "+
-                                    "Reason: %s "+
-                                    "A transaction of %s is pending verification. "+
-                                    "Your OTP is: %s. valid for 5 mints. "+
-                                    "If this wasn't you - ignore this message"
+                            "Suspicious activity detected on your account.%n" +
+                                    "Reason: %s%n" +
+                                    "Transaction amount: %s%n" +
+                                    "Your OTP is: %s%n" +
+                                    "Valid for 5 minutes. If you did not initiate this transaction, " +
+                                    "contact your bank immediately.",
+                            reason, amount, otp
                     )
-
             );
-        }catch (Exception e){
-            log.error("Error Sending OTP notification {}",e.getMessage());
+        } catch (Exception e) {
+            log.error("Error processing OTP notification", e);
         }
     }
     @KafkaListener(topics = "transaction.completed")
@@ -52,7 +50,7 @@ public class NotificationService {
         try {
             String senderAccountNumber = (String) payload.get("senderAccountNumber");
             String receiverAccountNumber = (String) payload.get("receiverAccountNumber");
-            String amount = payload.get("accountNumber").toString();
+            String amount = payload.get("amount").toString();
 //            debit alert
             sendAlert(
                     senderAccountNumber,

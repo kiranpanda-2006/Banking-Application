@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaction Details | Banking System</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f7fb;
+            color: #172b4d;
+        }
+
+        header {
+            background: #173b63;
+            color: white;
+            padding: 22px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        header h2 {
+            font-size: 24px;
+        }
+
+        header span {
+            color: #dbeafe;
+            font-size: 14px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 45px auto;
+            padding: 0 24px;
+        }
+
+        .page-heading {
+            margin-bottom: 28px;
+        }
+
+        .page-heading h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .page-heading p {
+            color: #64748b;
+            font-size: 16px;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid #dce5f0;
+            border-radius: 12px;
+            padding: 28px;
+            box-shadow: 0 5px 20px rgba(15, 42, 75, 0.05);
+        }
+
+        .transaction-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            column-gap: 35px;
+        }
+
+        .detail {
+            display: grid;
+            grid-template-columns: minmax(135px, 1fr) minmax(0, 1.2fr);
+            gap: 15px;
+            align-items: start;
+            padding: 20px 5px;
+            border-bottom: 1px solid #e7edf5;
+            overflow-wrap: anywhere;
+        }
+
+        .label {
+            color: #64748b;
+            font-size: 15px;
+        }
+
+        .value {
+            color: #172b4d;
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .amount {
+            color: #159447;
+            font-size: 21px;
+            font-weight: bold;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 7px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .completed {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .failed, .rejected {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .pending, .processing, .pending-verification {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .default-status {
+            background: #e2e8f0;
+            color: #334155;
+        }
+
+        .actions {
+            margin-top: 28px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 13px 22px;
+            background: #2563eb;
+            color: white;
+            text-decoration: none;
+            border-radius: 7px;
+            font-weight: bold;
+        }
+
+        .btn:hover {
+            background: #1d4ed8;
+        }
+
+        @media (max-width: 760px) {
+            header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .container {
+                margin: 28px auto;
+                padding: 0 15px;
+            }
+
+            .page-heading h1 {
+                font-size: 26px;
+            }
+
+            .card {
+                padding: 15px;
+            }
+
+            .transaction-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .detail {
+                grid-template-columns: minmax(110px, 0.8fr) minmax(0, 1.2fr);
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h2>🏦 Banking System</h2>
+    <span>Secure &nbsp; • &nbsp; Fast &nbsp; • &nbsp; Reliable</span>
+</header>
+
+<main class="container">
+
+    <section class="page-heading">
+        <h1>Transaction Details</h1>
+        <p>View the details and status of your transaction.</p>
+    </section>
+
+    <section class="card">
+        <div class="transaction-grid">
+
+            <div>
+                <div class="detail">
+                    <span class="label">Transaction ID</span>
+                    <span class="value"
+                          th:text="${transaction.id ?: '-'}">-</span>
+                </div>
+
+                <div class="detail">
+                    <span class="label">Sender Account</span>
+                    <span class="value"
+                          th:text="${transaction.senderAccountNumber ?: '-'}">-</span>
+                </div>
+
+                <div class="detail">
+                    <span class="label">Receiver Account</span>
+                    <span class="value"
+                          th:text="${transaction.receiverAccountNumber ?: '-'}">-</span>
+                </div>
+
+                <div class="detail">
+                    <span class="label">Amount</span>
+                    <span class="amount">
+                        ₹<span th:text="${transaction.amount ?: 0}">0.00</span>
+                    </span>
+                </div>
+
+                <div class="detail">
+                    <span class="label">Transaction Type</span>
+                    <span class="value"
+                          th:text="${transaction.type ?: '-'}">-</span>
+                </div>
+
+                <div class="detail">
+                    <span class="label">Status</span>
+                    <span class="value">
+                        <span class="badge default-status"
+                              th:classappend="${transaction.status != null ? ' ' + #strings.toLowerCase(transaction.status).replace('_', '-') : ''}"
+                              th:text="${transaction.status ?: 'UNKNOWN'}">
+                            UNKNOWN
+                        </span>
+                    </span>
+                </div>
+            </div>
+
+            <div>
+                <div class="detail">
+                    <span class="label">Description</span>
+                    <span class="value"
+                          th:text="${transaction.description ?: '-'}">-</span>
+                </div>
+
+                <div class="detail">
+                    <span class="label">Failure Reason</span>
+                    <span class="value"
+                          th:text="${transaction.failureReason ?: '-'}">-</span>
+                </div>
+
+                <div class="detail">
+                    <span class="label">Reference Number</span>
+                    <span class="value"
+                          th:text="${transaction.referenceNumber ?: '-'}">-</span>
+                </div>
+
+                <div class="detail">
+                    <span class="label">Created At</span>
+                    <span class="value"
+                          th:text="${transaction.createdAt != null ? #temporals.format(transaction.createdAt, 'dd MMM yyyy, HH:mm:ss') : '-'}">-</span>
+                </div>
+
+                <div class="detail">
+                    <span class="label">Completed At</span>
+                    <span class="value"
+                          th:text="${transaction.completedAt != null ? #temporals.format(transaction.completedAt, 'dd MMM yyyy, HH:mm:ss') : '-'}">-</span>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <div class="actions">
+        <a th:href="@{/api/v1/user/home}" class="btn">
+            ← Back to Transactions
+        </a>
+    </div>
+
+</main>
+
+</body>
+</html>

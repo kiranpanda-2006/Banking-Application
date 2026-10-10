@@ -64,6 +64,10 @@ account:
   service:
     url: http://localhost:8081
 
+transaction:
+  service:
+    url: http://localhost:8082
+
 management:
   endpoints:
     web:
