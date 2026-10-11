@@ -20,7 +20,6 @@
       color: #1e293b;
     }
 
-    /* Navbar */
     .navbar {
       background: #0f766e;
       color: white;
@@ -42,7 +41,6 @@
       font-size: 14px;
     }
 
-    /* Main Container */
     .container {
       max-width: 1150px;
       margin: 35px auto;
@@ -62,7 +60,6 @@
       color: #64748b;
     }
 
-    /* Dashboard Cards */
     .dashboard-cards {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -98,7 +95,6 @@
       margin-top: 10px;
     }
 
-    /* Quick Actions */
     .section-title {
       font-size: 21px;
       margin-bottom: 18px;
@@ -128,7 +124,40 @@
       transform: translateY(-3px);
     }
 
-    /* Transactions */
+    /* No Account */
+    .no-account {
+      background: white;
+      padding: 45px 25px;
+      border-radius: 12px;
+      text-align: center;
+      margin-bottom: 35px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+    }
+
+    .no-account h2 {
+      margin-bottom: 12px;
+    }
+
+    .no-account p {
+      color: #64748b;
+      margin-bottom: 25px;
+    }
+
+    .open-account-btn {
+      display: inline-block;
+      background: #0f766e;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: 0.2s;
+    }
+
+    .open-account-btn:hover {
+      background: #115e59;
+    }
+
     .transaction-box {
       background: white;
       padding: 25px;
@@ -136,44 +165,11 @@
       overflow-x: auto;
     }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 500px;
-    }
-
-    th, td {
-      padding: 15px;
-      text-align: left;
-      border-bottom: 1px solid #e2e8f0;
-      font-size: 14px;
-    }
-
-    th {
+    .transaction-box p {
       color: #64748b;
-      font-weight: 600;
     }
 
-    .credit {
-      color: #16a34a;
-      font-weight: bold;
-    }
-
-    .debit {
-      color: #dc2626;
-      font-weight: bold;
-    }
-
-    .status {
-      background: #dcfce7;
-      color: #15803d;
-      padding: 5px 10px;
-      border-radius: 20px;
-      font-size: 12px;
-    }
-
-    /* Footer */
-    footer {
+    .footer {
       text-align: center;
       padding: 25px;
       color: #64748b;
@@ -181,6 +177,7 @@
     }
 
     @media (max-width: 600px) {
+
       .navbar {
         padding: 15px 5%;
         flex-direction: column;
@@ -218,120 +215,162 @@
 
 </nav>
 
+
 <!-- Dashboard -->
 <div class="container">
 
   <!-- Welcome -->
   <div class="welcome">
-    <h1>Welcome back, Kiran! 👋</h1>
-    <p>Here's an overview of your banking account.</p>
-  </div>
 
-  <!-- Account Cards -->
-  <div class="dashboard-cards">
+    <h1>
+      Welcome back,
+      <span th:text="${user.name}">Kiran</span>! 👋
+    </h1>
 
-    <div class="card balance-card">
-      <h3>Total Account Balance</h3>
-      <div class="balance">₹ 1,25,000.00</div>
-      <p>Account No: XXXX XXXX 4582</p>
-    </div>
-
-    <div class="card">
-      <h3>Total Deposits</h3>
-      <div class="balance" style="color: #16a34a;">₹ 50,000</div>
-      <p>This month</p>
-    </div>
-
-    <div class="card">
-      <h3>Total Withdrawals</h3>
-      <div class="balance" style="color: #dc2626;">₹ 12,500</div>
-      <p>This month</p>
-    </div>
+    <p>
+      Here's an overview of your banking account.
+    </p>
 
   </div>
 
-  <!-- Quick Actions -->
-  <h2 class="section-title">Quick Actions</h2>
 
-  <div class="actions">
+  <!-- ====================================== -->
+  <!-- ACCOUNT EXISTS                         -->
+  <!-- ====================================== -->
 
-    <a th:href="@{/deposit}" class="action-btn">
-      💰 Deposit Money
-    </a>
+  <div th:if="${hasAccount}">
 
-    <a th:href="@{/withdraw}" class="action-btn">
-      💸 Withdraw Money
-    </a>
+    <div class="dashboard-cards">
 
-    <a th:href="@{/transfer}" class="action-btn">
-      🔄 Transfer Money
-    </a>
+      <!-- Balance -->
+      <div class="card balance-card">
 
-    <a th:href="@{/transactions}" class="action-btn">
-      📄 View Transactions
+        <h3>Total Account Balance</h3>
+
+        <div class="balance">
+          ₹
+          <span th:text="${account.balance}">
+            1,25,000.00
+          </span>
+        </div>
+
+        <p>
+          Account No:
+          <span th:text="${account.accountNumber}">
+            XXXX XXXX 4582
+          </span>
+        </p>
+
+      </div>
+
+
+      <!-- Account Type -->
+      <div class="card">
+
+        <h3>Account Type</h3>
+
+        <div class="balance"
+             th:text="${account.accountType}">
+          SAVINGS
+        </div>
+
+        <p>Bank Account</p>
+
+      </div>
+
+
+      <!-- Account Status -->
+      <div class="card">
+
+        <h3>Account Status</h3>
+
+        <div class="balance"
+             th:text="${account.status}">
+          ACTIVE
+        </div>
+
+        <p>Your account status</p>
+
+      </div>
+
+    </div>
+
+
+    <!-- Quick Actions -->
+    <h2 class="section-title">
+      Quick Actions
+    </h2>
+
+    <div class="actions">
+
+      <a th:href="@{/deposit}" class="action-btn">
+        💰 Deposit Money
+      </a>
+
+      <a th:href="@{/withdraw}" class="action-btn">
+        💸 Withdraw Money
+      </a>
+
+      <a th:href="@{/transfer}" class="action-btn">
+        🔄 Transfer Money
+      </a>
+
+      <a th:href="@{/transactions}" class="action-btn">
+        📄 View Transactions
+      </a>
+
+    </div>
+
+  </div>
+
+
+  <!-- ====================================== -->
+  <!-- ACCOUNT DOES NOT EXIST                 -->
+  <!-- ====================================== -->
+
+  <div th:unless="${hasAccount}" class="no-account">
+
+    <h2>
+      🏦 No Bank Account Found
+    </h2>
+
+    <p>
+      You have successfully registered with MyBank,
+      but you haven't opened a bank account yet.
+    </p>
+
+    <a th:href="@{/account/create}"
+       class="open-account-btn">
+      Open Bank Account
     </a>
 
   </div>
 
-  <!-- Recent Transactions -->
-  <h2 class="section-title">Recent Transactions</h2>
+
+  <!-- ====================================== -->
+  <!-- RECENT TRANSACTIONS                    -->
+  <!-- ====================================== -->
+
+  <h2 class="section-title">
+    Recent Transactions
+  </h2>
 
   <div class="transaction-box">
 
-    <table>
-      <thead>
-      <tr>
-        <th>Description</th>
-        <th>Date</th>
-        <th>Type</th>
-        <th>Amount</th>
-        <th>Status</th>
-      </tr>
-      </thead>
-
-      <tbody>
-
-      <tr>
-        <td>Salary Credited</td>
-        <td>20 Sep 2026</td>
-        <td>Credit</td>
-        <td class="credit">+ ₹50,000</td>
-        <td><span class="status">Success</span></td>
-      </tr>
-
-      <tr>
-        <td>Amazon Shopping</td>
-        <td>19 Sep 2026</td>
-        <td>Debit</td>
-        <td class="debit">- ₹2,500</td>
-        <td><span class="status">Success</span></td>
-      </tr>
-
-      <tr>
-        <td>Electricity Bill</td>
-        <td>18 Sep 2026</td>
-        <td>Debit</td>
-        <td class="debit">- ₹1,200</td>
-        <td><span class="status">Success</span></td>
-      </tr>
-
-      <tr>
-        <td>Money Received</td>
-        <td>17 Sep 2026</td>
-        <td>Credit</td>
-        <td class="credit">+ ₹5,000</td>
-        <td><span class="status">Success</span></td>
-      </tr>
-
-      </tbody>
-    </table>
+    <p>
+      Transaction history will be displayed here.
+    </p>
 
   </div>
 
 </div>
 
-<footer>
-  © 2026 MyBank. All rights reserved. | Secure Banking Made Simple
+
+<footer class="footer">
+
+  © 2026 MyBank. All rights reserved.
+  | Secure Banking Made Simple
+
 </footer>
 
 </body>

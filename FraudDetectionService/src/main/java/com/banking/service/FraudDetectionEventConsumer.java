@@ -29,12 +29,12 @@ public class FraudDetectionEventConsumer {
     public void consumeTransactionInitiated(
             @Payload Map<String,Object> payload
             ){
-        log.info("Received Transaction for fraudCheck: {}",payload.get("TransactionId"));
+        log.info("Received Transaction for fraudCheck: {}",payload.get("transactionId"));
 
         try{
             fraudDetectionService.checkTransaction(payload);
         } catch (Exception e) {
-            log.info("some ");
+            log.info("some exception reaches: {}",e.getMessage());
         }
     }
 }

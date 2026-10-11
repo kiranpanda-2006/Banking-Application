@@ -10,4 +10,6 @@ public interface UserService {
 
     void loginUser(LoginDto loginUser);
 
+    User getUserId(String email);
+
 }

@@ -101,7 +101,7 @@ public class TransactionService {
         Transaction transaction = transactionRepo.findById(transactionId).
                 orElseThrow(() -> new ResourceNotFoundException("No transaction found with "+transactionId));
 
-        String otpKey = "verificationOtp" + transactionId;
+        String otpKey = "verificationOtp:" + transactionId;
         String storedOtp = redisTemplate.opsForValue().get(otpKey);
 
         if (storedOtp == null){
@@ -136,6 +136,7 @@ public class TransactionService {
                 .senderAccountNumber(request.getSenderAccountNumber())
                 .receiverAccountNumber(request.getReceiverAccountNumber())
                 .amount(request.getAmount())
+                .userId(request.getUserId())
                 .type(TransactionType.TRANSFER)
                 .status(TransactionStatus.PROCESSING)
                 .description(request.getDescription())
@@ -167,7 +168,7 @@ public class TransactionService {
                 transaction.getAmount());
 //        completing the transaction from senders account to receivers account
         accountServiceClient.creditBalance(
-                transaction.getReceiverAccountNumber(),
+                transaction.getReceiverAccountNumber().trim(),
                 transaction.getAmount()
         );
 

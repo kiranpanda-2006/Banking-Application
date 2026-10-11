@@ -7,8 +7,11 @@ import com.banking.repository.UserRepository;
 import com.banking.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,25 +20,48 @@ import java.util.Map;
 @Slf4j
 public class UserServiceimpl implements UserService {
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    private Map<String,String> db = new HashMap<>();
+    private final PasswordEncoder passwordEncoder;
+
 
 
     @Override
     public void registerUser(registerDto registerUser) {
-        db.put("email", registerUser.getEmail());
-        db.put("password", registerUser.getPassword());
+
+        User user = new User();
+
+        user.setName(registerUser.getName());
+        user.setDateOfBirth(registerUser.getDateOfBirth());
+        user.setEmail(registerUser.getEmail());
+        user.setPassword(passwordEncoder.encode(registerUser.getPassword()));
+        user.setCreatedAt(LocalDateTime.now());
+        userRepository.save(user);
     }
 
     @Override
     public void loginUser(LoginDto loginUser) {
-        String userName = db.get("email");
-        String password = db.get("password");
 
-        if (!loginUser.getUsername().equals(userName) || !loginUser.getPassword().equals(password)){
-            throw new RuntimeException("invalid User.");
+        User user = userRepository.findByEmail(loginUser.getUsername())
+                .orElseThrow(() ->
+                        new RuntimeException("Invalid email or password"));
+
+        if (!passwordEncoder.matches(
+                loginUser.getPassword(),
+                user.getPassword())) {
+
+            throw new RuntimeException("Invalid email or password");
         }
-        log.info("user Logged in Successfully: {}", loginUser.getUsername());
+
+        log.info("User logged in successfully: {}",
+                loginUser.getUsername());
+    }
+
+    @Override
+    public User getUserId(String email) {
+        User user =
+                userRepository.findByEmail(email)
+                        .orElseThrow(()-> new UsernameNotFoundException("no user found."));
+        return user;
     }
 }

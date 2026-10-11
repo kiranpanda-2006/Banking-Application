@@ -40,8 +40,7 @@ public class FraudDetectionService {
     private double maxBalancePercentage;
 
     public void checkTransaction(Map<String, Object> payload) {
-
-        String transactionId = String.valueOf(payload.get("id"));
+        String transactionId = String.valueOf(payload.get("transactionId"));
         String accountNumber =
                 String.valueOf(payload.get("senderAccountNumber"));
 
@@ -94,7 +93,15 @@ public class FraudDetectionService {
                     VERIFICATION_REQUIRED_TOPIC,
                     transactionId,
                     verificationEvent
-            );
+            ).whenComplete((fdsResult, ex) -> {
+                if (ex != null) {
+                    log.error("Failed to publish verification.required", ex);
+                } else {
+                    log.info("Published verification.required for transaction: {}",
+                            transactionId);
+                    log.info(fdsResult.getRecordMetadata().topic());
+                }
+            });
 
         } else {
 

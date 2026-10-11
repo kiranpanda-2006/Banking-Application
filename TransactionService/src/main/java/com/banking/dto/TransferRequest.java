@@ -21,5 +21,7 @@ public class TransferRequest {
     @Positive(message = "transferring amount must be positive")
     private BigDecimal amount;
 
+    private Long userId;
+
     private String description;
 }

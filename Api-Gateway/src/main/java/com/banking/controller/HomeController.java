@@ -2,10 +2,17 @@ package com.banking.controller;
 
 import com.banking.client.AccountserviceClient;
 import com.banking.dto.AccountDto;
+import com.banking.dto.AccountResponseDto;
 import com.banking.dto.LoginDto;
 import com.banking.dto.registerDto;
+import com.banking.entity.User;
 import com.banking.exception.PasswordMismatchException;
+import com.banking.repository.UserRepository;
 import com.banking.service.UserService;
+import feign.FeignException;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,9 +27,17 @@ public class HomeController {
 
     private final UserService userService;
 
+    private final UserRepository userRepository;
 
-    public HomeController(UserService userService){
+    private final AccountserviceClient accountserviceClient;
+
+
+    public HomeController(UserService userService,
+                          UserRepository userRepository,
+                          AccountserviceClient accountserviceClient){
         this.userService = userService;
+        this.userRepository = userRepository;
+        this.accountserviceClient = accountserviceClient;
     }
 
     @GetMapping
@@ -51,7 +66,31 @@ public class HomeController {
         return "welcome";
     }
     @GetMapping("/welcome")
-    public String welcome(){
+    public String welcome(
+            Authentication authentication,
+            Model model) {
+
+        String email = authentication.getName();
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() ->
+                        new UsernameNotFoundException("User not found"));
+
+        model.addAttribute("user", user);
+
+        try {
+
+            AccountResponseDto account =
+                    accountserviceClient.findAccountByUserId(user.getId());
+
+            model.addAttribute("account", account);
+            model.addAttribute("hasAccount", true);
+
+        } catch (FeignException.NotFound e) {
+
+            model.addAttribute("hasAccount", false);
+        }
+
         return "welcome";
     }
 
