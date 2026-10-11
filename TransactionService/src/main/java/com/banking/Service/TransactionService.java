@@ -101,7 +101,7 @@ public class TransactionService {
         Transaction transaction = transactionRepo.findById(transactionId).
                 orElseThrow(() -> new ResourceNotFoundException("No transaction found with "+transactionId));
 
-        String otpKey = "verificationOtp" + transactionId;
+        String otpKey = "verificationOtp:" + transactionId;
         String storedOtp = redisTemplate.opsForValue().get(otpKey);
 
         if (storedOtp == null){
