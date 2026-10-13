@@ -9,21 +9,29 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.Map;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Map;
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class AccountEventConsumer {
     private final AccountService accountService;
+    private final ObjectMapper objectMapper;
 /*
 * consume means no fraud detected transfer  money from one account to another
 * credit in receivers account
 * consume transaction completed event by Kafka*/
     @KafkaListener(topics = "transaction.completed")
     public void consumeTransactionCompleted(
-            @Payload Map<String,Object> payload
+            String message
             ){
 
         try {
+            Map<String, Object> payload = objectMapper.readValue(
+                    message,
+                    new TypeReference<Map<String, Object>>() {}
+            );
             String receiversAccount = (String) payload.get("receiverAccountNumber");
             BigDecimal amount = new BigDecimal(payload.get("amount").toString());
 
@@ -40,20 +48,25 @@ public class AccountEventConsumer {
     * Blocks the flagged account
     * */
     @KafkaListener(topics = "fraud.detected")
-    public void consumeFraudDetected(
-            @Payload Map<String,Object> payload
-    ){
-       try{
-           String accountNumber = (String) payload.get("accountNumber");
+    public void consumeFraudDetected(String message) {
+        try {
+            Map<String, Object> payload = objectMapper.readValue(
+                    message,
+                    new TypeReference<Map<String, Object>>() {}
+            );
 
-           log.info("Fraud detected - Blocking Account {}",accountNumber);
+            String accountNumber =
+                    String.valueOf(payload.get("accountNumber")).trim();
 
-           accountService.blockAccount(accountNumber);
-       } catch (Exception e) {
-           log.error("Error Blocking account {}",e.getMessage());
-       }
+            log.info("Fraud detected - Blocking Account {}", accountNumber);
 
+            accountService.blockAccount(accountNumber);
 
+        } catch (Exception e) {
+            log.error("Error blocking account", e);
+            throw new RuntimeException("Failed to process fraud.detected event", e);
+        }
     }
+
 
 }

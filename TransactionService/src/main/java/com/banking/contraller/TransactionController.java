@@ -30,7 +30,7 @@ public class TransactionController {
 
     @GetMapping("/{transactionId}")
     public ResponseEntity<TransactionResponse> getTransaction(
-            @RequestParam String transactionId
+            @PathVariable String transactionId
     ){
         return ResponseEntity.status(HttpStatus.OK)
                 .body(transactionService.getTransaction(transactionId));
@@ -46,7 +46,7 @@ public class TransactionController {
 
     @PostMapping("/{transactionId}/verify")
     public ResponseEntity<TransactionResponse> verifyOtp(
-            @PathVariable String transactionId,
+            @PathVariable("transactionId") String transactionId,
             @RequestParam String otp
     ){
         log.info("OTP verification request - transaction : {}", transactionId);

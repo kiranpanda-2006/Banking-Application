@@ -82,7 +82,8 @@ public class TransactionService {
 
     public TransactionResponse getTransaction(String transactionId) {
         return mapToResponse(transactionRepo.findById(transactionId)
-                .orElseThrow(() -> new ResourceNotFoundException("Transaction Not found for " +transactionId)));
+                .orElseThrow(() -> new ResourceNotFoundException("Transaction Not found for " +transactionId))
+        );
     }
 
     public List<TransactionResponse> getTransactionHistory(String accountNumber) {

@@ -33,7 +33,7 @@ public class SecurityConfig {
                 )
 
                 .formLogin(form -> form
-                        .loginPage("/api/user/v1/login-info")
+                        .loginPage("/api/user/v1/login")
                         .authenticationSuccessHandler(
                                 new RedirectServerAuthenticationSuccessHandler("/api/user/v1/welcome")
                         )

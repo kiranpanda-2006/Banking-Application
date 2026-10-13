@@ -57,7 +57,8 @@ public class TransactionEventConsumer {
                             new ResourceNotFoundException("Transaction not found: " + transactionId));
 
             if (transaction.getStatus() != TransactionStatus.PROCESSING) {
-                log.warn("Transaction not processing; skipping: {}", transactionId);
+                log.warn("Transaction not processing; skipping: {}, status: {}", transactionId,
+                        transaction.getStatus());
                 return;
             }
 

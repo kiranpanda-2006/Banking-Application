@@ -60,7 +60,7 @@ public class HomeController {
         return "login";
     }
 
-    @PostMapping("/login-info")
+    @PostMapping("/login")
     public String loginInfo(@ModelAttribute("login") LoginDto loginCredential){
         userService.loginUser(loginCredential);
         return "welcome";
